@@ -1,19 +1,21 @@
-from telegram.ext import Updater, CommandHandler
+import logging
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-def start(update, context):
-    update.message.reply_text("مرحبًا بك في بوت 1M Journey 🚀")
+BOT_TOKEN = '8145115338:AAFuoZSR7XvQTCdkXIg6p6M9pT1R2C-3BM8'
 
-def main():
-    import os
-    TOKEN = os.getenv("BOT_TOKEN")
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
-    updater = Updater(token=TOKEN, use_context=True)
-    dp = updater.dispatcher
-
-    dp.add_handler(CommandHandler("start", start))
-
-    updater.start_polling()
-    updater.idle()
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("🚀 أهلاً بك في 1M Journey!")
 
 if __name__ == '__main__':
-    main()
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+
+    print("Bot is running...")
+    app.run_polling()
