@@ -1,21 +1,28 @@
-import logging
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram import Update, InputFile
+from telegram.ext import Updater, CommandHandler, CallbackContext
+import os
 
-BOT_TOKEN = '8145115338:AAFuoZSR7XvQTCdkXIg6p6M9pT1R2C-3BM8'
+TOKEN = "8145115338:AAFuoZSR7XvQTCdkXIg6p6M9pT1R2C-3BM8"
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text("أهلًا بك في بوت 1M Journey 🚀")
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🚀 أهلاً بك في 1M Journey!")
+def send_file(update: Update, context: CallbackContext):
+    chat_id = update.effective_chat.id
+    file_path = "example.txt"
+    with open(file_path, "w") as f:
+        f.write("هذا ملف تجريبي من البوت.")
+    with open(file_path, "rb") as f:
+        context.bot.send_document(chat_id=chat_id, document=InputFile(f))
 
-if __name__ == '__main__':
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
+def main():
+    updater = Updater(TOKEN)
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("file", send_file))
+    updater.start_polling()
+    updater.idle()
 
-    app.add_handler(CommandHandler("start", start))
+if __name__ == "__main__":
+    main()
 
-    print("Bot is running...")
-    app.run_polling()
