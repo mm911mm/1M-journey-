@@ -1,4 +1,3 @@
-from telegram import Update, InputFile
 from telegram.ext import Updater, CommandHandler, CallbackContext
 import os
 
